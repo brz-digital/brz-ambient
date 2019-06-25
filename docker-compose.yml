@@ -1,0 +1,59 @@
+version: "3.1"
+services:
+    memcached:
+      image: memcached:alpine
+      container_name: brz-ambient-memcached
+
+    redis:
+      image: redis:alpine
+      container_name: brz-ambient-redis
+
+    mysql:
+      image: mysql:8.0
+      container_name: brz-ambient-mysql
+      working_dir: /application
+      volumes:
+        - .:/application
+      environment:
+        - MYSQL_ROOT_PASSWORD=brzdigital
+        - MYSQL_DATABASE=app
+        - MYSQL_USER=brzdigital
+        - MYSQL_PASSWORD=brzdigital
+      ports:
+        - "8082:3306"
+
+    postgres:
+      image: postgres:11.1-alpine
+      container_name: brz-ambient-postgres
+      working_dir: /application
+      volumes:
+        - .:/application
+      environment:
+        - POSTGRES_USER=brzdigital
+        - POSTGRES_PASSWORD=brzdigital
+        - POSTGRES_DB=app
+      ports:
+        - "8084:5432"
+
+    elasticsearch:
+      image: elasticsearch:6.5.4
+      container_name: brz-ambient-elasticsearch
+
+    webserver:
+      image: nginx:alpine
+      container_name: brz-ambient-webserver
+      working_dir: /application
+      volumes:
+          - .:/application
+          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8080:80"
+
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: brz-ambient-php-fpm
+      working_dir: /application
+      volumes:
+        - .:/application
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
+
