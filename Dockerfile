@@ -3,7 +3,11 @@ FROM phpdockerio/php73-fpm:latest
 MAINTAINER "Hugo Fabricio" <hugo@brzdigital.com.br>
 
 # Copy files
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# COPY start.sh /start.sh
+# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY supervisord.conf /etc/supervisord.conf
+COPY site.conf /etc/nginx/sites-available/default.conf
 
 # Fix debconf warnings upon build
 ARG DEBIAN_FRONTEND=noninteractive
